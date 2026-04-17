@@ -203,8 +203,7 @@ int lbr_collector_poll(lbr_collector_t *c,
             continue;
         }
 
-        /* PERF_RECORD_SAMPLE = 9. We only care about these. */
-        if (hdr.type == 9) {
+        if (hdr.type == PERF_RECORD_SAMPLE) {
             const uint8_t *p = rec + sizeof(hdr);
             /* PERF_SAMPLE_IP */
             p += 8;

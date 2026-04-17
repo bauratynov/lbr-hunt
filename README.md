@@ -9,8 +9,8 @@ facility. Attaches to a running process via `perf_event_open`, streams
 the CPU's 32‑entry branch-stack through the kernel ring buffer, and
 scores each sample window against a bundle of compressed heuristics.
 
-> **Status:** Sprint 1 complete — pure analyzer core + unit tests.
-> Sprints 2–5 add the `perf_event_open` collector, CLI, CI, and docs.
+> **Status:** v0.1.0 — analyzer, collector, CLI, CI, integration tests.
+> See [CHANGELOG.md](CHANGELOG.md) for the release notes.
 
 ---
 
@@ -88,7 +88,7 @@ make clean
 Tests are pure C99 and build on macOS / Windows MinGW / any libc‑free
 sandbox — the analyzer core has no `perf_event_open` dependency.
 
-## Usage (once Sprint 2 lands)
+## Usage
 
 ```bash
 # attach to an existing process
@@ -105,12 +105,51 @@ sudo ./lbr-hunt -p 1234 \
     --ret-density 0.55 \
     --min-chain   6    \
     --score-threshold 0.8
+
+# run a suspicious program with auto-exit on first flagged window
+sudo ./lbr-hunt --stop-on-first -- ./maybe_rop
+echo "exit=$?"   # 0 clean, 3 suspicious window caught
+```
+
+### Example output
+
+```
+=== t=   1.24s  branches=1024 ===
+  ret density     : 0.932
+  ind-call density: 0.004
+  short gadgets   : 289 pairs
+  max ret chain   : 38
+  unpaired rets   : 471
+  ret target range: 512 bytes
+  score           : 0.930  *** SUSPICIOUS ***
+  flags           : HIGH_RET_DENSITY SHORT_GADGETS TIGHT_CLUSTERS RET_OVERFLOW
 ```
 
 Requires one of:
 - `root`
 - `CAP_PERFMON` capability, or
 - `kernel.perf_event_paranoid <= 2`
+
+### Replay mode (no kernel required)
+
+For experimentation on non-Linux hosts, or for reproducing reports on
+captured traces, the `tests/replay` binary feeds a log file through the
+same analyzer:
+
+```bash
+cd tests && make replay
+./replay fixtures/rop.log
+./replay fixtures/clean.log --jsonl
+```
+
+Log format is line-oriented:
+
+```
+# from         to           type      [cycles]
+0x403000 0x600100 ret 0
+0x403008 0x600108 ret 0
+...
+```
 
 ## Testing philosophy
 
@@ -123,10 +162,10 @@ and asserts against the resulting `lbr_report_t`.
 ## Roadmap
 
 - [x] Sprint 1: analyzer core + unit tests
-- [ ] Sprint 2: `perf_event_open` collector + ring-buffer parser
-- [ ] Sprint 3: CLI + JSON-lines output + process-attach mode
-- [ ] Sprint 4: integration test with a synthetic ROP binary
-- [ ] Sprint 5: CI (clang + gcc), man page, packaging, release tag
+- [x] Sprint 2: `perf_event_open` collector + ring-buffer parser
+- [x] Sprint 3: CLI, JSON-lines output, spawn/attach modes, integration tests, CI
+- [ ] Sprint 4: binary-aware validation (`/proc/pid/maps` + call-preceded check)
+- [ ] Sprint 5: Prometheus exporter + long-running daemon
 
 ## References
 
