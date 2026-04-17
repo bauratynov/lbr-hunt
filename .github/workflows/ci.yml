@@ -1,0 +1,60 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  unit-tests:
+    name: unit tests (${{ matrix.os }} / ${{ matrix.cc }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04]
+        cc: [gcc, clang]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: compiler version
+        run: ${{ matrix.cc }} --version
+
+      - name: build tests
+        run: make test CC=${{ matrix.cc }}
+
+      - name: build CLI
+        run: make bin CC=${{ matrix.cc }}
+
+      - name: smoke test (help message)
+        run: ./lbr-hunt --help || true
+
+      - name: integration (replay fixtures)
+        run: ./tests/integration.sh
+
+  static-analysis:
+    name: static analysis
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: install cppcheck
+        run: sudo apt-get update && sudo apt-get install -y cppcheck
+      - name: cppcheck
+        run: |
+          cppcheck --std=c99 --enable=warning,performance,portability \
+                   --error-exitcode=1 --quiet \
+                   -Iinclude src/ tests/replay.c
+
+  sanitizers:
+    name: sanitizers
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: asan + ubsan unit tests
+        run: |
+          make -C tests clean
+          make -C tests run \
+            CC=clang \
+            CFLAGS="-std=c99 -Wall -Wextra -O1 -g -I../include -D_GNU_SOURCE \
+                    -fsanitize=address,undefined -fno-omit-frame-pointer"

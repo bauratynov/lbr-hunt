@@ -5,7 +5,7 @@ OPT      ?= -O0 -g
 CFLAGS   += $(CSTD) $(WARN) $(OPT) -I../include -D_GNU_SOURCE
 LDLIBS   += -lm
 
-TESTS := test_analyzer
+TESTS := test_analyzer replay
 
 .PHONY: all run clean
 all: $(TESTS)
@@ -13,8 +13,15 @@ all: $(TESTS)
 test_analyzer: test_analyzer.c ../src/analyzer.c
 	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
 
+replay: replay.c ../src/analyzer.c ../src/format.c
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
+
 run: $(TESTS)
-	@set -e; for t in $(TESTS); do echo "==> $$t"; ./$$t; done
+	@echo "==> test_analyzer"
+	@./test_analyzer
+	@echo
+	@echo "==> integration (replay fixtures)"
+	@./integration.sh
 
 clean:
 	rm -f $(TESTS)
