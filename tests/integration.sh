@@ -20,7 +20,9 @@ trap 'rm -rf "$out"' EXIT
 run() {
     local fixture=$1
     local expect=$2
-    ./replay "fixtures/$fixture" --jsonl > "$out/$fixture.json"
+    # replay exits with 3 on suspicious (our own canary convention);
+    # that's not a harness failure — let the grep below decide.
+    ./replay "fixtures/$fixture" --jsonl > "$out/$fixture.json" || true
     if ! grep -q "\"suspicious\":$expect" "$out/$fixture.json"; then
         echo "FAIL: $fixture expected suspicious=$expect"
         cat "$out/$fixture.json"
