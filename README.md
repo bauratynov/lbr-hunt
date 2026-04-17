@@ -1,5 +1,9 @@
 # lbr-hunt
 
+<p align="center">
+  <img src="docs/hero.svg" alt="LBR branch-type heatmap and score timeline" width="820"/>
+</p>
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Language: C99](https://img.shields.io/badge/Language-C99-blue.svg)](https://en.wikipedia.org/wiki/C99)
 [![Platform: Linux x86-64](https://img.shields.io/badge/Platform-Linux%20x86__64-green.svg)](https://man7.org/linux/man-pages/man2/perf_event_open.2.html)

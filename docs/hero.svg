@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 300" role="img" aria-labelledby="lbrt lbrd">
+  <title id="lbrt">lbr-hunt — LBR branch-type heatmap and score timeline</title>
+  <desc  id="lbrd">
+    Two 32-cell LBR buffer snapshots: clean traffic (mixed call / cond / ret / ind)
+    and a ROP window (almost entirely returns). Below, a score timeline that spikes
+    past the 0.70 verdict threshold.
+  </desc>
+
+  <style><![CDATA[
+    .bg    { fill: #0d1117; }
+    .panel { fill: #161b22; stroke: #30363d; }
+    .call  { fill: #58a6ff; }
+    .cond  { fill: #3fb950; }
+    .ret   { fill: #f85149; }
+    .ind   { fill: #a371f7; }
+    .sys   { fill: #d29922; }
+    .unk   { fill: #30363d; }
+    .thresh{ stroke:#f85149; stroke-dasharray:4 3; stroke-width:1; fill:none; }
+    .scoreA{ fill:none; stroke:#58a6ff; stroke-width:2; }
+    .scoreB{ fill:none; stroke:#f85149; stroke-width:2; }
+    .title { fill:#e6edf3; font:bold 12px ui-monospace,Menlo,monospace; }
+    .label { fill:#7d8590; font:11px ui-monospace,Menlo,monospace; }
+    .alert { fill:#f85149; font:bold 11px ui-monospace,Menlo,monospace; }
+    .legend{ fill:#e6edf3; font:10px ui-monospace,Menlo,monospace; }
+  ]]></style>
+
+  <rect class="bg" width="820" height="300"/>
+
+  <!-- Legend -->
+  <g transform="translate(430,18)">
+    <rect class="call" width="10" height="10"/><text x="14" y="9" class="legend">call</text>
+    <rect class="cond" x="56" width="10" height="10"/><text x="70" y="9" class="legend">cond</text>
+    <rect class="ret"  x="116" width="10" height="10"/><text x="130" y="9" class="legend">ret</text>
+    <rect class="ind"  x="170" width="10" height="10"/><text x="184" y="9" class="legend">ind</text>
+    <rect class="sys"  x="230" width="10" height="10"/><text x="244" y="9" class="legend">sys</text>
+    <rect class="unk"  x="286" width="10" height="10"/><text x="300" y="9" class="legend">other</text>
+  </g>
+
+  <!-- Clean strip: 32 cells -->
+  <text x="20" y="22" class="title">clean window — mixed traffic</text>
+  <g transform="translate(20,34)">
+    <rect class="call" x="0"   width="22" height="32"/>
+    <rect class="cond" x="24"  width="22" height="32"/>
+    <rect class="call" x="48"  width="22" height="32"/>
+    <rect class="ret"  x="72"  width="22" height="32"/>
+    <rect class="cond" x="96"  width="22" height="32"/>
+    <rect class="call" x="120" width="22" height="32"/>
+    <rect class="ind"  x="144" width="22" height="32"/>
+    <rect class="cond" x="168" width="22" height="32"/>
+    <rect class="call" x="192" width="22" height="32"/>
+    <rect class="cond" x="216" width="22" height="32"/>
+    <rect class="ret"  x="240" width="22" height="32"/>
+    <rect class="call" x="264" width="22" height="32"/>
+    <rect class="cond" x="288" width="22" height="32"/>
+    <rect class="ind"  x="312" width="22" height="32"/>
+    <rect class="call" x="336" width="22" height="32"/>
+    <rect class="cond" x="360" width="22" height="32"/>
+    <rect class="unk"  x="384" width="22" height="32"/>
+    <rect class="call" x="408" width="22" height="32"/>
+    <rect class="ret"  x="432" width="22" height="32"/>
+    <rect class="cond" x="456" width="22" height="32"/>
+    <rect class="call" x="480" width="22" height="32"/>
+    <rect class="ind"  x="504" width="22" height="32"/>
+    <rect class="cond" x="528" width="22" height="32"/>
+    <rect class="call" x="552" width="22" height="32"/>
+    <rect class="sys"  x="576" width="22" height="32"/>
+    <rect class="cond" x="600" width="22" height="32"/>
+    <rect class="call" x="624" width="22" height="32"/>
+    <rect class="ind"  x="648" width="22" height="32"/>
+    <rect class="cond" x="672" width="22" height="32"/>
+    <rect class="ret"  x="696" width="22" height="32"/>
+    <rect class="call" x="720" width="22" height="32"/>
+    <rect class="cond" x="744" width="22" height="32"/>
+  </g>
+
+  <!-- ROP strip: 32 cells, mostly ret -->
+  <text x="20" y="94" class="title">rop window — 32× return, tight target cluster</text>
+  <g transform="translate(20,106)">
+    <rect class="ret" x="0"   width="22" height="32"/>
+    <rect class="ret" x="24"  width="22" height="32"/>
+    <rect class="ret" x="48"  width="22" height="32"/>
+    <rect class="ret" x="72"  width="22" height="32"/>
+    <rect class="ret" x="96"  width="22" height="32"/>
+    <rect class="ret" x="120" width="22" height="32"/>
+    <rect class="ret" x="144" width="22" height="32"/>
+    <rect class="ret" x="168" width="22" height="32"/>
+    <rect class="ret" x="192" width="22" height="32"/>
+    <rect class="ret" x="216" width="22" height="32"/>
+    <rect class="ret" x="240" width="22" height="32"/>
+    <rect class="ret" x="264" width="22" height="32"/>
+    <rect class="ret" x="288" width="22" height="32"/>
+    <rect class="ret" x="312" width="22" height="32"/>
+    <rect class="ret" x="336" width="22" height="32"/>
+    <rect class="ret" x="360" width="22" height="32"/>
+    <rect class="ret" x="384" width="22" height="32"/>
+    <rect class="ret" x="408" width="22" height="32"/>
+    <rect class="ret" x="432" width="22" height="32"/>
+    <rect class="ret" x="456" width="22" height="32"/>
+    <rect class="ret" x="480" width="22" height="32"/>
+    <rect class="ret" x="504" width="22" height="32"/>
+    <rect class="ret" x="528" width="22" height="32"/>
+    <rect class="ret" x="552" width="22" height="32"/>
+    <rect class="ret" x="576" width="22" height="32"/>
+    <rect class="ret" x="600" width="22" height="32"/>
+    <rect class="ret" x="624" width="22" height="32"/>
+    <rect class="ret" x="648" width="22" height="32"/>
+    <rect class="ret" x="672" width="22" height="32"/>
+    <rect class="ret" x="696" width="22" height="32"/>
+    <rect class="ret" x="720" width="22" height="32"/>
+    <rect class="ret" x="744" width="22" height="32"/>
+  </g>
+
+  <!-- Score timeline -->
+  <text x="20" y="170" class="title">score timeline — blue: clean process  ·  red: same process under ROP</text>
+  <g transform="translate(20,180)">
+    <rect class="panel" width="780" height="100"/>
+    <!-- y-axis labels (0, 0.5, 1) -->
+    <text x="-6" y="92" text-anchor="end" class="label">0</text>
+    <text x="-6" y="54" text-anchor="end" class="label">.5</text>
+    <text x="-6" y="12" text-anchor="end" class="label">1</text>
+    <!-- threshold 0.70 -->
+    <line class="thresh" x1="0" y1="36" x2="780" y2="36"/>
+    <text x="784" y="39" class="alert">0.70</text>
+
+    <!-- clean score line: stays around 0.15 (y ≈ 85) -->
+    <polyline class="scoreA"
+      points="0,86 40,84 80,88 120,85 160,86 200,83 240,87 280,84 320,85
+              360,88 400,85 440,86 480,84 520,85 560,86 600,84 640,87
+              680,85 720,86 760,85 780,85"/>
+
+    <!-- ROP score line: same start, then climbs and spikes -->
+    <polyline class="scoreB"
+      points="0,86 40,85 80,86 120,85 160,82 200,72 240,60 280,48 320,40
+              360,32 400,24 440,18 480,14 520,10 560,8 600,7 640,7
+              680,8 720,7 760,7 780,7"/>
+
+    <text x="600" y="3" class="alert">SUSPICIOUS ⚠</text>
+  </g>
+</svg>
